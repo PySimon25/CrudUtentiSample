@@ -47,6 +47,17 @@ class UtenteDAOMariaDB(UtenteDAOInterface):
         finally:
             conn.close()
 
+    def find_by_email(self, email: str) -> Utente | None:
+        """Implementa l'operazione READ per EMAIL"""
+        conn = self.pool.get_connection()
+        try:
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute("SELECT id_utente, nome, cognome, email, telefono FROM Utenti WHERE email = ?", (email,))
+                row = cursor.fetchone()
+                return Utente(**row) if row else None
+        finally:
+            conn.close()
+
     def update(self, utente: Utente) -> bool:
         """Implementa l'operazione UPDATE"""
         conn = self.pool.get_connection()
@@ -63,7 +74,4 @@ class UtenteDAOMariaDB(UtenteDAOInterface):
             conn.close()
 
     def delete(self, id_utente: int) -> bool:
-        raise NotImplementedError
-    
-    def find_by_email(self, email: str) -> Utente | None:
         raise NotImplementedError

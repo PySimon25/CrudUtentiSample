@@ -26,3 +26,11 @@ print("-------")
 
 users = service.recupera_tutti()
 print(users)
+
+print("-------")
+
+try:
+    result = service.registra_utente("Ennio", "Passalacqua", "stefanibonanno@pozzecco-morpurgo.com", "+39 522 482511")
+    print(result)
+except Exception as ex:
+    print(ex)
