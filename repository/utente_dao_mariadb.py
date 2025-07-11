@@ -32,16 +32,7 @@ class UtenteDAOMariaDB(UtenteDAOInterface):
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("SELECT id_utente, nome, cognome, email, telefono FROM Utenti WHERE id_utente = ?", (id_utente,))
                 row = cursor.fetchone()
-                if row:
-                    return Utente(
-                        id_utente=row["id_utente"],
-                        nome=row["nome"],
-                        cognome=row["cognome"],
-                        email=row["email"],
-                        telefono=row["telefono"]
-                    )
-                else:
-                    return None
+                return Utente(**row) if row else None
         finally:
             conn.close()
 
@@ -55,15 +46,7 @@ class UtenteDAOMariaDB(UtenteDAOInterface):
                 if len(rows) > 0:
                     result = []
                     for row in rows:
-                        result.append(
-                            Utente(
-                                id_utente=row["id_utente"],
-                                nome=row["nome"],
-                                cognome=row["cognome"],
-                                email=row["email"],
-                                telefono=row["telefono"]
-                            )
-                        )
+                        result.append(Utente(**row))
                     return result
                 else:
                     return []
