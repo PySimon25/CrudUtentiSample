@@ -43,13 +43,7 @@ class UtenteDAOMariaDB(UtenteDAOInterface):
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("SELECT id_utente, nome, cognome, email, telefono FROM Utenti")
                 rows = cursor.fetchall()
-                if len(rows) > 0:
-                    result = []
-                    for row in rows:
-                        result.append(Utente(**row))
-                    return result
-                else:
-                    return []
+                return [Utente(**row) for row in rows]
         finally:
             conn.close()
 
