@@ -4,6 +4,7 @@ from repository import UtenteDAOInterface
 
 # Implementazione concreta del DAO
 class UtenteDAOMariaDB(UtenteDAOInterface):
+
     def __init__(self, pool: mariadb.ConnectionPool) -> None:
         self.pool = pool
 
@@ -74,4 +75,14 @@ class UtenteDAOMariaDB(UtenteDAOInterface):
             conn.close()
 
     def delete(self, id_utente: int) -> bool:
-        raise NotImplementedError
+        """Implementa l'operazione DELETE"""
+        conn = self.pool.get_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("DELETE FROM Utenti WHERE id_utente = ?", (id_utente,))
+                conn.commit()
+                rowcount = cursor.rowcount
+                return rowcount > 0
+        finally:
+            conn.close()
+

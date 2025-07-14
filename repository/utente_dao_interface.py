@@ -11,7 +11,7 @@ class UtenteDAOInterface(ABC):
         
     @abstractmethod
     def get_by_id(self, id_utente: int) -> Utente | None:
-        """Recuoera un utente per ID"""
+        """Recupera un utente per ID"""
         pass
 
     @abstractmethod

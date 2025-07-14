@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class Utente:
     id_utente: int | None = None
-    nome: str = ""  # <-- valore di default
+    nome: str = ""
     cognome: str = ""
     email: str = ""
     telefono: str = ""
