@@ -1,8 +1,8 @@
 import os
 import mariadb as db
 from dotenv import load_dotenv
-from repository import UtenteDAOMariaDB
-from service import UtenteService
+from repository import UtenteDAOMariaDB, PrestitoDAOMariaDB
+from service import PrestitoService, UtenteService
 
 load_dotenv()
 
@@ -16,21 +16,32 @@ conn = db.ConnectionPool(
     pool_size=5
 )
 
-dao = UtenteDAOMariaDB(conn)
-service = UtenteService(dao)
+utente_dao = UtenteDAOMariaDB(conn)
+utente_service = UtenteService(utente_dao)
 
-user = service.recupera_utente(1)
+user = utente_service.recupera_utente(1)
 print(user)
-
 print("-------")
 
-users = service.recupera_tutti()
-print(users)
-
-print("-------")
+#users = utente_service.recupera_tutti()
+#print(users)
+#print("-------")
 
 try:
-    result = service.registra_utente("Ennio", "Passalacqua", "stefanibonanno@pozzecco-morpurgo.com", "+39 522 482511")
+    result = utente_service.registra_utente("Ennio", "Passalacqua", "stefanibonanno@pozzecco-morpurgo.com", "+39 522 482511")
     print(result)
 except Exception as ex:
     print(ex)
+
+print("-------")
+
+prestito_dao = PrestitoDAOMariaDB(conn)
+prestito_service = PrestitoService(prestito_dao)
+
+p1 = prestito_service.recupera_dettaglio_prestito(1)
+print(p1)
+print("-------")
+
+p2 = prestito_service.recupera_dettaglio_prestiti_utente(8)
+print(p2)
+
