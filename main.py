@@ -1,7 +1,7 @@
 import os
 import mariadb as db
 from dotenv import load_dotenv
-from repository import UtenteDAOMariaDB, PrestitoDAOMariaDB
+from repository import LibroDAOMariaDB, UtenteDAOMariaDB, PrestitoDAOMariaDB
 from service import PrestitoService, UtenteService
 
 load_dotenv()
@@ -44,4 +44,6 @@ print("-------")
 
 p2 = prestito_service.recupera_dettaglio_prestiti_utente(8)
 print(p2)
+print("-------")
 
+#libro_dao = LibroDAOMariaDB(conn)
