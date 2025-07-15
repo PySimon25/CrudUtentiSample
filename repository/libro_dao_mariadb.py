@@ -15,7 +15,7 @@ class LibroDAOMariaDB(LibroDAOInterface):
                 cursor.execite(
                     """INSERT INTO Libri (id_biblioteca, titolo, autore, anno_pubblicazione, isbn, id_categoria, id_genere)
                     VALUES(?, ?, ?, ?, ?, ?, ?)""",
-                    (libro.id_biblioteca, libro.titolo, libro.autore, libro.anno_pubblicazione, libro.isbn, libro.id_categoria, libro.id_genere)
+                    (libro.biblioteca.id_biblioteca, libro.titolo, libro.autore, libro.anno_pubblicazione, libro.isbn, libro.categoria.id_categoria, libro.genere.id_genere)
                 )
                 conn.commit()
                 newid = cursor.lastrowid
@@ -40,7 +40,7 @@ class LibroDAOMariaDB(LibroDAOInterface):
             with conn.cursor() as cursor:
                 cursor.execute(
                     """UPDATE Libri SET id_biblioteca = ?, titolo = ?, autore = ?, anno_pubblicazione = ?, isbn = ?, id_categoria = ?, id_genere = ? WHERE id_libro = ?""",
-                    (libro.id_biblioteca, libro.titolo, libro.autore, libro.anno_pubblicazione, libro.id_categoria, libro.id_genere, libro.id_libro)
+                    (libro.biblioteca.id_biblioteca, libro.titolo, libro.autore, libro.anno_pubblicazione, libro.isbn, libro.categoria.id_categoria, libro.genere.id_genere, libro.id_libro)
                 )
                 conn.commit()
                 rowcount = cursor.rowcount

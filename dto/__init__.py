@@ -1,7 +1,9 @@
+from .biblioteca import Biblioteca
+from .bibliotecario import Bibliotecario
+from .categoria import Categoria
+from .genere import Genere
 from .libro import Libro
-from .libro_dettaglio import LibroDettaglio
 from .prestito import Prestito
-from .prestito_dettaglio import PrestitoDettaglio
 from .utente import Utente
 
-__all__ = ['Libro', 'LibroDettaglio', 'Prestito', 'PrestitoDettaglio', 'Utente']
+__all__ = ['Biblioteca', 'Bibliotecario', 'Categoria', 'Genere', 'Libro', 'Prestito', 'Utente']

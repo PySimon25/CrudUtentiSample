@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dto import Libro, LibroDettaglio
+from dto import Libro
 
 # Interfaccia DAO astratta
 class LibroDAOInterface(ABC):

@@ -38,12 +38,13 @@ print("-------")
 prestito_dao = PrestitoDAOMariaDB(conn)
 prestito_service = PrestitoService(prestito_dao)
 
-p1 = prestito_service.recupera_dettaglio_prestito(1)
+p1 = prestito_service.recupera_prestito(1)
 print(p1)
 print("-------")
 
-p2 = prestito_service.recupera_dettaglio_prestiti_utente(8)
-print(p2)
-print("-------")
+p2 = prestito_service.recupera_prestiti_utente(8)
+for row in p2:
+    print(p2)
+    print("-------")
 
 #libro_dao = LibroDAOMariaDB(conn)

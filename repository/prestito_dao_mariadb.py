@@ -1,7 +1,6 @@
 import mariadb
-from dto import Prestito, PrestitoDettaglio
+from dto import Biblioteca, Bibliotecario, Libro, Prestito, Utente
 from repository import PrestitoDAOInterface
-from datetime import date
 
 # Implementazione concreta del DAO
 class PrestitoDAOMariaDB(PrestitoDAOInterface):
@@ -9,7 +8,7 @@ class PrestitoDAOMariaDB(PrestitoDAOInterface):
     def __init__(self, pool: mariadb.ConnectionPool) -> None:
         self.pool = pool
 
-    def assegna_prestito(self, id_utente: int, id_libro: int, id_biblioteca: int, id_bibliotecario: int, data_prevista: date) -> int:
+    def assegna_prestito(self, prestito: Prestito) -> int:
         """Implementa l'operazione CREATE"""
         conn = self.pool.get_connection()
         try:
@@ -17,7 +16,8 @@ class PrestitoDAOMariaDB(PrestitoDAOInterface):
                 cursor.execute(
                     """INSERT INTO Prestiti (id_utente, id_libro, id_biblioteca, id_bibliotecario, data_prestito, data_restituzione_prevista)
                     VALUES(?, ?, ?, ?, ?, ?)""",
-                    (id_utente, id_libro, id_biblioteca, id_bibliotecario)
+                    (prestito.utente.id_utente, prestito.libro.id_libro, prestito.biblioteca.id_biblioteca, prestito.bibliotecario.id_bibliotecario, 
+                     prestito.data_prestito, prestito.data_restituzione_prevista)
                 )
                 conn.commit()
                 newid = cursor.lastrowid
@@ -32,20 +32,10 @@ class PrestitoDAOMariaDB(PrestitoDAOInterface):
         conn = self.pool.get_connection()
         try:
             with conn.cursor(dictionary=True) as cursor:
-                cursor.execute("""SELECT id_prestito, id_biblioteca, id_utente, id_libro, data_prestito, data_restituzione_prevista, 
-                               data_restituzione_effettiva FROM Prestiti WHERE id_prestito = ?""", (id_prestito,))
-                row = cursor.fetchone()
-                return Prestito(**row) if row else None
-        finally:
-            conn.close()
-    
-    def get_dettaglio_by_id(self, id_prestito: int) -> PrestitoDettaglio | None:
-        conn = self.pool.get_connection()
-        try:
-            with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("""SELECT pr.id_prestito, pr.data_prestito, pr.data_restituzione_prevista, pr.data_restituzione_effettiva, 
-                               ut.nome nome_utente, ut.cognome cognome_utente, li.titolo, li.autore, li.isbn, bb.nome_biblioteca, 
-                               bi.nome nome_bibliotecario, bi.cognome cognome_bibliotecario
+                               ut.id_utente, ut.nome nome_utente, ut.cognome cognome_utente, ut.email, ut.telefono, li.id_libro, li.titolo, 
+                               li.autore, li.anno_pubblicazione, li.isbn, bb.id_biblioteca, bb.nome_biblioteca, bb.città citta, bb.indirizzo, 
+                               bi.id_bibliotecario, bi.nome nome_bibliotecario, bi.cognome cognome_bibliotecario, bi.email
                                FROM Prestiti pr 
                                JOIN Utenti ut on ut.id_utente = pr.id_utente 
                                JOIN Libri li on pr.id_libro = li.id_libro 
@@ -53,7 +43,7 @@ class PrestitoDAOMariaDB(PrestitoDAOInterface):
                                JOIN Bibliotecari bi on bi.id_bibliotecario = pr.id_bibliotecario
                                WHERE id_prestito = ?""", (id_prestito,))
                 row = cursor.fetchone()
-                return PrestitoDettaglio(**row) if row else None
+                return self._row_to_prestito(row)
         finally:
             conn.close()
 
@@ -62,20 +52,10 @@ class PrestitoDAOMariaDB(PrestitoDAOInterface):
         conn = self.pool.get_connection()
         try:
             with conn.cursor(dictionary=True) as cursor:
-                cursor.execute("""SELECT id_prestito, id_biblioteca, id_utente, id_libro, data_prestito, data_restituzione_prevista, 
-                               data_restituzione_effettiva FROM Prestiti WHERE id_utente = ?""", (id_utente,))
-                rows = cursor.fetchall()
-                return [Prestito(**row) for row in rows]
-        finally:
-            conn.close()
-
-    def get_dettagli_by_id_utente(self, id_utente: int) -> list['PrestitoDettaglio']:
-        conn = self.pool.get_connection()
-        try:
-            with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("""SELECT pr.id_prestito, pr.data_prestito, pr.data_restituzione_prevista, pr.data_restituzione_effettiva, 
-                               ut.nome nome_utente, ut.cognome cognome_utente, li.titolo, li.autore, li.isbn, bb.nome_biblioteca, 
-                               bi.nome nome_bibliotecario, bi.cognome cognome_bibliotecario
+                               ut.id_utente, ut.nome nome_utente, ut.cognome cognome_utente, ut.email, ut.telefono, li.id_libro, li.titolo, 
+                               li.autore, li.anno_pubblicazione,  li.isbn, bb.id_biblioteca, bb.nome_biblioteca, bb.città citta, bb.indirizzo, 
+                               bi.id_bibliotecario, bi.nome nome_bibliotecario, bi.cognome cognome_bibliotecario, bi.email
                                FROM Prestiti pr 
                                JOIN Utenti ut on ut.id_utente = pr.id_utente 
                                JOIN Libri li on pr.id_libro = li.id_libro 
@@ -83,6 +63,49 @@ class PrestitoDAOMariaDB(PrestitoDAOInterface):
                                JOIN Bibliotecari bi on bi.id_bibliotecario = pr.id_bibliotecario
                                WHERE pr.id_utente = ?""", (id_utente,))
                 rows = cursor.fetchall()
-                return [PrestitoDettaglio(**row) for row in rows]
+                return [self._row_to_prestito(row) for row in rows]
         finally:
             conn.close()
+
+    def _row_to_prestito(self, row: dict) -> Prestito:
+        # Per popolare oggetti complessi non è possibile usare
+        # return Prestito(**row) if row else None  /  return [Prestito(**row) for row in rows]
+        utente = Utente(
+            id_utente = row['id_utente'],
+            nome = row['nome_utente'],
+            cognome = row['cognome_utente'],
+            email = row['email'],
+            telefono = row['telefono']
+        )
+
+        biblioteca = Biblioteca(
+            id_biblioteca = row['id_biblioteca'],
+            nome_biblioteca = row['nome_biblioteca'],
+            citta = row['citta'],
+            indirizzo = row['indirizzo']
+        )
+
+        bibliotecario = Bibliotecario(
+            id_bibliotecario = row['id_bibliotecario'],
+            nome = row['nome_bibliotecario'],
+            cognome = row['cognome_bibliotecario']
+        )
+
+        libro = Libro(
+            id_libro = row['id_libro'],
+            titolo = row['titolo'],
+            autore = row['autore'],
+            anno_pubblicazione = row['anno_pubblicazione'],
+            isbn = row['isbn']
+        )
+
+        return Prestito(
+            id_prestito = row['id_prestito'],
+            biblioteca = biblioteca,
+            bibliotecario = bibliotecario,
+            utente = utente,
+            libro = libro,
+            data_prestito = row['data_prestito'],
+            data_restituzione_prevista = row['data_restituzione_prevista'],
+            data_restituzione_effettiva = row['data_restituzione_effettiva']
+        )
