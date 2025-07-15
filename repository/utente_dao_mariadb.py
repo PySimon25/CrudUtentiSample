@@ -66,7 +66,7 @@ class UtenteDAOMariaDB(UtenteDAOInterface):
             with conn.cursor() as cursor:
                 cursor.execute(
                     """UPDATE Utenti SET nome = ?, cognome = ?, email = ?, telefono = ? WHERE id_utente = ?""",
-                    (Utente.nome, Utente.cognome, Utente.email, Utente.telefono)
+                    (utente.nome, utente.cognome, utente.email, utente.telefono, utente.id_utente)
                 )
                 conn.commit()
                 rowcount = cursor.rowcount
