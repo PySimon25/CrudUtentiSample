@@ -44,7 +44,15 @@ print("-------")
 
 p2 = prestito_service.recupera_prestiti_utente(8)
 for row in p2:
-    print(p2)
+    print(row)
     print("-------")
 
-#libro_dao = LibroDAOMariaDB(conn)
+libro_dao = LibroDAOMariaDB(conn)
+b1 = libro_dao.get_by_id(1)
+print(b1)
+print("-------")
+
+books = libro_dao.get_all()
+for book in books:
+    print(book)
+    print("---")
