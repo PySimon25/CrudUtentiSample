@@ -34,7 +34,7 @@ class PrestitoDAOMariaDB(PrestitoDAOInterface):
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("""SELECT pr.id_prestito, pr.data_prestito, pr.data_restituzione_prevista, pr.data_restituzione_effettiva, 
                                ut.id_utente, ut.nome nome_utente, ut.cognome cognome_utente, ut.email, ut.telefono, li.id_libro, li.titolo, 
-                               li.autore, li.anno_pubblicazione,  li.isbn, ca.id_categoria, ca.nome_categoria, ge.id_genere, ge.nome_genere,
+                               li.autore, li.anno_pubblicazione, li.isbn, ca.id_categoria, ca.nome_categoria, ge.id_genere, ge.nome_genere,
                                bb.id_biblioteca, bb.nome_biblioteca, bb.città citta, bb.indirizzo,
                                bbl.id_biblioteca libro_biblioteca_id_biblioteca, bbl.nome_biblioteca libro_biblioteca_nome_biblioteca, 
                                bbl.città libro_biblioteca_citta, bbl.indirizzo libro_biblioteca_indirizzo,
@@ -63,7 +63,7 @@ class PrestitoDAOMariaDB(PrestitoDAOInterface):
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("""SELECT pr.id_prestito, pr.data_prestito, pr.data_restituzione_prevista, pr.data_restituzione_effettiva, 
                                ut.id_utente, ut.nome nome_utente, ut.cognome cognome_utente, ut.email, ut.telefono, li.id_libro, li.titolo, 
-                               li.autore, li.anno_pubblicazione,  li.isbn, ca.id_categoria, ca.nome_categoria, ge.id_genere, ge.nome_genere,
+                               li.autore, li.anno_pubblicazione, li.isbn, ca.id_categoria, ca.nome_categoria, ge.id_genere, ge.nome_genere,
                                bb.id_biblioteca, bb.nome_biblioteca, bb.città citta, bb.indirizzo,
                                bbl.id_biblioteca libro_biblioteca_id_biblioteca, bbl.nome_biblioteca libro_biblioteca_nome_biblioteca, 
                                bbl.città libro_biblioteca_citta, bbl.indirizzo libro_biblioteca_indirizzo,
