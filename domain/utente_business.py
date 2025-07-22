@@ -9,7 +9,7 @@ class UtenteBusiness:
 
     # Nome
     @property
-    def nome(self) -> str:
+    def nome(self) -> str | None:
         return self._dto.nome
 
     @nome.setter
@@ -21,7 +21,7 @@ class UtenteBusiness:
 
     # Cognome
     @property
-    def cognome(self) -> str:
+    def cognome(self) -> str | None:
         return self._dto.cognome
 
     @cognome.setter
@@ -33,7 +33,7 @@ class UtenteBusiness:
 
     # Email
     @property
-    def email(self) -> str:
+    def email(self) -> str | None:
         return self._dto.email
 
     @email.setter
@@ -45,7 +45,7 @@ class UtenteBusiness:
 
     # Telefono
     @property
-    def telefono(self) -> str:
+    def telefono(self) -> str | None:
         return self._dto.telefono
 
     @telefono.setter
