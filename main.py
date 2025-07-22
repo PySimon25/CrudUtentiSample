@@ -2,7 +2,7 @@ import os
 import mariadb as db
 from dotenv import load_dotenv
 from repository import LibroDAOMariaDB, UtenteDAOMariaDB, PrestitoDAOMariaDB
-from service import PrestitoService, UtenteService
+from service import  LibroService, PrestitoService, UtenteService
 
 load_dotenv()
 
@@ -48,11 +48,13 @@ for row in p2:
     print("-------")
 
 libro_dao = LibroDAOMariaDB(conn)
-b1 = libro_dao.get_by_id(1)
+libro_service = LibroService(libro_dao)
+
+b1 = libro_service.recupera_libro(1)
 print(b1)
 print("-------")
 
-books = libro_dao.get_all()
+books = libro_service.recupera_libri()
 for book in books:
     print(book)
     print("---")
