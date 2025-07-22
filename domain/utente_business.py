@@ -3,9 +3,12 @@ import re
 
 class UtenteBusiness:
 
-    # TODO Sostituire dto Utente con parametri nominati
-    def __init__(self, dto: Utente) -> None:
-        self._dto = dto
+    def __init__(self, nome: str, cognome: str, email: str, telefono: str) -> None:
+        self._dto = Utente()
+        self.nome = nome
+        self.cognome = cognome
+        self.email = email
+        self.telefono = telefono
 
     # Nome
     @property

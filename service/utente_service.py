@@ -2,6 +2,7 @@ from repository import UtenteDAOInterface
 from domain import UtenteBusiness
 from dto import Utente
 from exceptions import EmailGiaRegistrataError
+from throws import throws
 
 class UtenteService():
 
@@ -13,17 +14,14 @@ class UtenteService():
 
     def recupera_utente(self, id: int) -> Utente | None:
         return self._dao.get_by_id(id)
-    
-    # TODO Passare oggetto utente business anzichè parametri singoli
-    def registra_utente(self, nome: str, cognome: str, email: str, telefono: str) -> int:
-        dto = Utente()
-        ub = UtenteBusiness(dto)
 
-        # Valida i dati
-        ub.nome = nome
-        ub.cognome = cognome
-        ub.email = email
-        ub.telefono = telefono
+    @throws(ValueError, EmailGiaRegistrataError)
+    def registra_utente(self, nome: str, cognome: str, email: str, telefono: str) -> int:
+        '''Registra un nuovo utente nel database'''
+        ub = UtenteBusiness(nome = nome, 
+                            cognome = cognome, 
+                            email = email, 
+                            telefono = telefono)
 
         # Controllo per email già registrata sul database
         if self._dao.find_by_email(email) is not None:
